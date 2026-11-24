@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="workshop_bay_data1" model="workshop.bay">
+            <field name="bay_name">Washing Bay</field>
+            <field name="supported_job_type_ids" eval="[Command.link(ref('workshop_job_type_data1'))]"/>
+        </record>
+        <record id="workshop_bay_data2" model="workshop.bay">
+            <field name="bay_name">Alignment Bay</field>
+            <field name="supported_job_type_ids" eval="[Command.link(ref('workshop_job_type_data2'))]"/>
+        </record>
+        <record id="workshop_bay_data3" model="workshop.bay">
+            <field name="bay_name">Express Bay</field>
+            <field name="supported_job_type_ids" eval="[Command.set([ref('workshop_job_type_data1'),ref('workshop_job_type_data3'),ref('workshop_job_type_data2')])]"/>
+        </record>
+        <record id="workshop_bay_data4" model="workshop.bay">
+            <field name="bay_name">General Bay</field>
+            <field name="supported_job_type_ids" eval="[Command.set([ref('workshop_job_type_data1'),ref('workshop_job_type_data3')])]"/>
+        </record>
+        <record id="workshop_bay_data5" model="workshop.bay">
+            <field name="bay_name">Painting Bay</field>
+            <field name="supported_job_type_ids" eval="[Command.link(ref('workshop_job_type_data4'))]"/>
+        </record>
+    </data>
+</odoo>

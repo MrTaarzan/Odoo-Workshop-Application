@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="workshop_job_type_data1" model="workshop.job.type">
+            <field name="job_type_name">Washing</field>
+        </record>
+        <record id="workshop_job_type_data2" model="workshop.job.type">
+            <field name="job_type_name">Alignment</field>
+        </record>
+        <record id="workshop_job_type_data3" model="workshop.job.type">
+            <field name="job_type_name">Repair</field>
+        </record>
+        <record id="workshop_job_type_data4" model="workshop.job.type">
+            <field name="job_type_name">Painting</field>
+        </record>
+    </data>
+</odoo>

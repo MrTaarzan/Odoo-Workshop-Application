@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="workshop_report_view_list" model="ir.ui.view">
+        <field name="name">workshop.job.order.report.list</field>
+        <field name="model">workshop.job.order</field>
+        <field name="arch" type="xml">
+            <list string="Workshop Analysis" create="0" edit="0" delete="0" multi_edit="0">
+                <field name="reference_number" optional="show"/>
+                <field name="job_date"/>
+                <field name="customer_id"/>
+                <field name="vehicle_id" optional="show"/>
+                <field name="job_type_id" optional="show"/>
+                <field name="workshop_bay_id" optional="show"/>
+                <field name="job_status"
+                       optional="show"
+                       widget="badge"
+                       decoration-success="job_status == 'invoiced'"
+                       decoration-info="job_status == 'confirmed'"
+                       decoration-warning="job_status == 'draft'"
+                       decoration-primary="job_status == 'done'"/>
+                <field name="warranty_status" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="total_amount" optional="show" sum="Sum of Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="workshop_report_view_pivot" model="ir.ui.view">
+        <field name="name">workshop.job.order.report.pivot</field>
+        <field name="model">workshop.job.order</field>
+        <field name="arch" type="xml">
+            <pivot string="Job Analysis" sample="1">
+                <field name="job_type_id" type="col"/>
+                <field name="mechanic_ids" type="col"/>
+                <field name="job_date" interval="month" type="row"/>
+                <field name="total_amount" type="measure"/>
+                <field name="job_status" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="workshop_report_view_graph" model="ir.ui.view">
+        <field name="name">workshop.job.order.report.graph</field>
+        <field name="model">workshop.job.order</field>
+        <field name="arch" type="xml">
+            <graph string="Job Analysis" type="line" sample="1">
+                <field name="job_type"/>
+                <field name="mechanic_ids"/>
+                <field name="job_date" interval="month"/>
+                <field name="total_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="workshop_report_action" model="ir.actions.act_window">
+        <field name="name">Workshop Report</field>
+        <field name="res_model">workshop.job.order</field>
+        <field name="view_mode">list,graph,pivot</field>
+        <field name="view_id" ref="workshop_report_view_graph"/>
+        <field name="context">{'search_default_not_invoiced' : False}</field>
+    </record>
+
+</odoo>

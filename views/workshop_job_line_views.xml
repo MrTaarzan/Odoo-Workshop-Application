@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="workshop_job_line_view_list" model="ir.ui.view">
+        <field name="name">workshop.job.line.list</field>
+        <field name="model">workshop.job.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="product_id"/>
+                <field name="unit_price"/>
+                <field name="quantity"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="line_subtotal"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="workshop_job_line_action" model="ir.actions.act_window">
+        <field name="name">Job Line</field>
+        <field name="res_model">workshop.job.line</field>
+        <field name="view_mode">list</field>
+    </record>
+
+</odoo>

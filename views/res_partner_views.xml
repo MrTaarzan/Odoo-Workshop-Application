@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_vehicles_smart_button" type="object" class="oe_stat_button" icon="directions_car">
+                     <field name="vehicle_count" widget="statinfo"/>
+                </button>
+                <button name="action_appointment_history" type="object" class="oe_stat_button" icon="history" invisible="appointment_count=='0'">
+                    <field name="appointment_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page name="Vehicles">
+                    <field name="vehicle_ids"/>
+                </page>
+                <page name="Job Orders">
+                    <field name="job_order_ids" create="0"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_select_inherit" model="ir.ui.view">
+        <field name="name">res.partner.select.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='properties']" position="after">
+                <filter string="With Vehicle" name="with_vehicle" domain="[('vehicle_ids','!=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_action_inherit" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_with_vehicle': True}</field>
+    </record>
+</odoo>

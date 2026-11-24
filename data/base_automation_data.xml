@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <record id="action_server_mail_followup_job_done" model="ir.actions.server">
+            <field name="name">Send Mail and Schedule Follow up for Completed Jobs</field>
+            <field name="model_id" ref="workshop.model_workshop_job_order"/>
+            <field name="state">code</field>
+            <field name="code">
+record.automated_action_job_done()
+            </field>
+        </record>
+
+        <record id="action_server_mail_job_done" model="ir.actions.server">
+            <field name="name">Post Mail in Chatter</field>
+            <field name="model_id" ref="workshop.model_workshop_job_order"/>
+            <field name="state">mail_post</field>
+            <field name="template_id" ref="mail_template_work_done"/>
+        </record>
+
+        <record id="automation_rule_send_mail" model="base.automation">
+            <field name="name">Send Mail when Work is done</field>
+            <field name="model_id" ref="workshop.model_workshop_job_order"/>
+            <field name="trigger">on_create_or_write</field>
+            <field name="filter_domain">[('job_status','=','done'),('mail_sent','=',False)]</field>
+            <field name="action_server_ids" eval="[Command.link(ref('action_server_mail_job_done')), Command.link(ref('action_server_mail_followup_job_done'))]"/>
+        </record>
+
+        <record id="action_server_mail_appointment_confirmation" model="ir.actions.server">
+            <field name="name">Send Appointment Confirmation Mail</field>
+            <field name="model_id" ref="workshop.model_calendar_event"/>
+            <field name="state">code</field>
+            <field name="code">
+template = env.ref('workshop.mail_template_appointment_confirmation')
+template.send_mail(record.id, force_send=True)
+record.write({'mail_sent': True})
+            </field>
+        </record>
+
+        <record id="action_server_apppointment_confirmation_chatter" model="ir.actions.server">
+            <field name="name">Post Appointment Confirmation in Chatter</field>
+            <field name="model_id" ref="workshop.model_calendar_event"/>
+            <field name="state">mail_post</field>
+            <field name="template_id" ref="mail_template_appointment_confirmation"/>
+        </record>
+
+        <record id="automation_rule_appointment_confirmation_mail" model="base.automation">
+            <field name="name">Send Appointment Confirmation Mail</field>
+            <field name="model_id" ref="workshop.model_calendar_event"/>
+            <field name="trigger">on_write</field>
+            <field name="filter_domain">[('appointment_confirm','=',True),('mail_sent','=',False)]</field>
+            <field name="action_server_ids" eval="[Command.link(ref('action_server_mail_appointment_confirmation')), Command.link(ref('action_server_apppointment_confirmation_chatter'))]"/>
+        </record>
+
+    </data>
+</odoo>

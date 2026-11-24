@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="workshop_root_menu" name="Workshop" web_icon="workshop,static/description/icon-hi.jpg"/>
+
+    <menuitem id="workshop_job_order_menu" name="Job Order" action="workshop_job_order_action" parent="workshop_root_menu" sequence="1"/>
+    <menuitem id="workshop_appointment_menu" name="Appointments" action="workshop_calendar_action" parent="workshop_root_menu" sequence="2"/>
+    <menuitem id="workshop_data_menu" name="Data" parent="workshop_root_menu" sequence="3" groups="group_workshop_receptionist,group_workshop_mechanic,group_workshop_manager"/>
+    <menuitem id="workshop_report_menu" name="Reporting" action="workshop_report_action" parent="workshop_root_menu" sequence="4" groups="group_workshop_manager"/>
+    <menuitem id="workshop_configuration_menu" name="Configuration" parent="workshop_root_menu" sequence="5" groups="group_workshop_mechanic,group_workshop_manager"/>
+
+    <menuitem id="workshop_customer_menu" name="Customers" action="view_partner_action_inherit" parent="workshop_data_menu" sequence="1" groups="group_workshop_receptionist,group_workshop_manager"/>
+    <menuitem id="workshop_vehicle_menu" name="Vehicles" action="workshop_vehicle_action" parent="workshop_data_menu" sequence="2" groups="group_workshop_receptionist,group_workshop_mechanic,group_workshop_manager"/>
+
+
+    <menuitem id="workshop_bay_menu" action="workshop_bay_action" parent="workshop_configuration_menu" sequence="1" groups="group_workshop_mechanic,group_workshop_manager"/>
+    <menuitem id="workshop_job_type_menu" action="workshop_job_type_action" parent="workshop_configuration_menu" sequence="2" groups="group_workshop_manager"/>
+    <menuitem id="workshop_vehicle_make_sub_menu" name="Vehicle" parent="workshop_configuration_menu" sequence="3" groups="group_workshop_manager"/>
+    <menuitem id="workshop_vehicle_make_menu" name="Vehicle Make" action="workshop_vehicle_make_action" parent="workshop_vehicle_make_sub_menu" groups="group_workshop_manager"/>
+</odoo>

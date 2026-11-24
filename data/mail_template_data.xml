@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        
+        <record id="mail_template_work_done" model="mail.template">
+            <field name="name">Workshop: Work Completed</field>
+            <field name="model_id" ref="workshop.model_workshop_job_order"/>
+            <field name="subject">{{ object.company_id.name }} - {{ object.job_status in ('done') and 'Completed' or 'In Progress' }} - {{ object.customer_id.name }} - {{ object.reference_number }} </field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="partner_to">{{ object.customer_id.id }}</field>
+            <field name="description">Sent to customer on work completion</field>
+            <field name="email_layout_xmlid">mail.mail_notification_layout_with_responsible_signature</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding:0px; font-size: 15px;">
+        Hello, <span style="font-weight: bold;" t-out="object.customer_id.name"/>
+        <br/>
+        Your work order for the vehicle <span style="font-weight: bold;" t-out="object.vehicle_id.license_plate"/>
+         with reference <span style="font-weight: bold;" t-out="object.reference_number"/> has been completed and is ready to be picked with the total amount of
+        <span style="font-weight: bold;" t-out="format_amount(object.total_amount, object.currency_id)"/>
+    </p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="mail_template_appointment_confirmation" model="mail.template">
+            <field name="name">Workshop: Appointment confirmation</field>
+            <field name="model_id" ref="workshop.model_calendar_event"/>
+            <field name="subject">{{ object.customer_id.name }} - Appointment Confirmed</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="partner_to">{{ object.customer_id.id }}</field>
+            <field name="description">Sent to Customer regarding Appointment confirmation</field>
+            <field name="body_html" type="html">
+<div style="margin:0px; padding:0px;">
+    <p style="margin:0px; padding:0px;">
+        Hello, <span style="font-weight:bold;" t-out="object.customer_id.name"/>
+        <br/>
+        You Appointment has been confirmed for <span style="font-weight:bold;" t-out="object.start_date"/>. Please bring your vehicle on the same day.<br/>
+        Thank You.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <record id="mail_template_appointment_reminder" model="mail.template">
+            <field name="name">Workshop: Appointment Reminder 1 day</field>
+            <field name="model_id" ref="workshop.model_calendar_event"/>
+            <field name="subject">{{ object.customer_id.name }} - Appointment Reminder</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="partner_to">{{ object.customer_id.id }}</field>
+            <field name="description">Sent to customer 1 day before appointment</field>
+            <field name="body_html" type="html">
+                <div style="margin:0px; padding:0px;">
+                    <p style="margin:0px; padding:0px;">
+                        Hello, <span style="font-weight:bold;" t-out="object.customer_id.name"/>
+                        <br/>
+                        Your appointment is scheduled for <strong>Tomorrow</strong> , please bring your vehicle on same day.
+                        <br/>
+                        Thank You
+                    </p>
+                </div>
+            </field>
+        </record>
+
+        <record id="mail_template_pickup_reminder" model="mail.template">
+            <field name="name">Workshop: Vehicle Pickup Reminder</field>
+            <field name="model_id" ref="workshop.model_workshop_job_order"/>
+            <field name="subject">{{ object.company_id.name }} - {{ object.customer_id.name }} - Vehicle Pickup Reminder</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="partner_to">{{ object.customer_id.id }}</field>
+            <field name="description">Sent to customer as a reminder for vehicle pickup</field>
+            <field name="body_html" type="html">
+                <div style="margin:0px; padding:0px;">
+                    <p style="margin:0px; padding:0px;">
+                        Hello, <span style="font-weight:bold;" t-out="object.customer_id.name"/>
+                        <br/>
+                        Work order for your vehicle <span style="font-weight:bold;" t-out="object.vehicle_id.license_plate"/>
+                        with the reference <span style="font-weight:bold;" t-out="object.reference_number"/>
+                        has been completed and is ready for PICKUP.
+                    </p>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

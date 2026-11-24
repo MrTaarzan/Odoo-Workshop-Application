@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="workshop_bay_list_view" model="ir.ui.view">
+        <field name="name">workshop.bay.list</field>
+        <field name="model">workshop.bay</field>
+        <field name="arch" type="xml">
+            <list string="Workshop Bay">
+                <field name="bay_name"/>
+                <field name="assigned_employee_id"/>
+                <field name="bay_type"/>
+                <field name="bay_status"/>
+                <field name="supported_job_type_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="workshop_bay_form_view" model="ir.ui.view">
+        <field name="name">workshop.bay.form</field>
+        <field name="model">workshop.bay</field>
+        <field name="arch" type="xml">
+            <form string="Workshop Bay">
+                <header>
+                    <button name="action_close_status" type="object" invisible="bay_status == 'closed'">CLOSE BAY</button>
+                    <button name="action_reset_status" type="object" invisible="bay_status != 'closed'">RESET STATUS</button>
+                    <field name="bay_status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="bay_name"/>
+                            <field name="assigned_employee_id"/>
+                        </group>
+                        <group>
+                            <field name="bay_type"/>
+                            <field name="supported_job_type_ids" widget="many2many_tags" options="{'on_tag_click':'edit_color'}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Ongoing Job">
+                            <field name="ongoing_job_ids" create="0"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="workshop_bay_view_search" model="ir.ui.view">
+        <field name="name">workshop.bay.search</field>
+        <field name="model">workshop.bay</field>
+        <field name="arch" type="xml">
+            <search string="Search Records">
+                <field name="bay_name"/>
+                <field name="bay_type"/>
+                <filter string="Archived" name="inactive" domain="[('active','=', False)]"/>
+                <filter string="Available" name="available" domain="['|', ('bay_status','=','free'),('bay_status','=','occupied')]"/>
+                <separator/>
+                <group>
+                    <filter string="Status" name="bay_status" context="{'group_by':'bay_status'}"/>
+                    <filter string="Supported Job Types" name="supported_job_type_ids" context="{'group_by':'supported_job_type_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="workshop_bay_action" model="ir.actions.act_window">
+        <field name="name">Workshop Bay</field>
+        <field name="res_model">workshop.bay</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_available' : True}</field>
+    </record>
+
+</odoo>

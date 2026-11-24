@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="workshop_job_order_list" model="ir.ui.view">
+        <field name="name">workshop.job.order.list</field>
+        <field name="model">workshop.job.order</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="reference_number"/>
+                <field name="customer_id"/>
+                <field name="customer_phone_number" optional="true"/>
+                <field name="vehicle_id"/>
+                <field name="job_type_id"/>
+                <field name="mechanic_ids" widget="many2many_tags"/>
+                <field name="workshop_bay_id"/>
+                <field name="job_date" optional="true"/>
+                <field name="job_status"
+                       widget="badge"
+                       decoration-success="job_status == 'invoiced'"
+                       decoration-info="job_status == 'confirmed'"
+                       decoration-warning="job_status == 'draft'"
+                       decoration-primary="job_status == 'done'"/>
+                <field name="total_amount"/>
+                <field name="warranty_status" optional="true"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="workshop_job_order_sec_list" model="ir.ui.view">
+        <field name="name">workshop.job.order.sec.list</field>
+        <field name="model">workshop.job.order</field>
+        <field name="inherit_id" ref="workshop_job_order_list"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="default_order">job_date, job_status desc</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="workshop_job_order_form" model="ir.ui.view">
+        <field name="name">workshop.job.order.form</field>
+        <field name="model">workshop.job.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_reset_to_draft" type="object" invisible="job_status == 'draft' or job_status == 'invoiced' " groups="workshop.group_workshop_receptionist">RESET TO DRAFT</button>
+                    <button name="action_create_quotation" type="object" invisible="job_type =='Washing' or job_status != 'draft'" class="btn-primary" groups="workshop.group_workshop_receptionist">CREATE QUOTATION</button>
+                    <button name="action_job_confirmed" type="object" invisible="(job_type !='Washing' or job_status != 'draft' ) and job_status != 'quotation' " class="btn-primary" groups="workshop.group_workshop_receptionist">CONFIRM</button>
+                    <button name="action_start_work" type="object" invisible="job_status != 'confirmed'" class="btn-primary" groups="workshop.group_workshop_mechanic">START WORK</button>
+                    <button name="action_mark_as_done" type="object" invisible="job_status != 'in_progress'" class="btn-primary" groups="workshop.group_workshop_mechanic">MARK AS DONE</button>
+                    <button name="action_create_invoice" type="object" invisible="job_status != 'done'" class="btn-primary" groups="workshop.group_workshop_manager">CREATE INVOICE</button>
+                    <button name="action_delivered" type="object" invisible="job_status != 'invoiced' or is_delivered" class="btn-primary" groups="workshop.group_workshop_receptionist">DELIVERED</button>
+                    <field name="job_status" widget="statusbar" statusbar_visible="draft,confirmed,in_progress,done,invoiced"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Paid" invisible="payment_state != 'paid'"/>
+
+                    <field name="is_delivered" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_show_appointment" type="object" class="oe_stat_button" icon="event_available" icon_class="oi-filled" invisible="not appointment_id" groups="workshop.group_workshop_receptionist">
+                            <field string="Appointment" name="appointment_count" widget="statinfo"/>
+                        </button>
+                        <button name="action_show_saleorders" type="object" class="oe_stat_button" icon="edit_square" icon_class="oi-filled" invisible="sale_order_count == '0'">
+                            <field string="Sale Orders" name="sale_order_count" widget="statinfo"/>
+                        </button>
+                        <button name="action_show_invoices" type="object" class="oe_stat_button" icon="receipt_long" invisible="invoice_count == '0'">
+                            <field string="Invoices" name="invoice_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <h1><field name="reference_number"/> </h1><br/>
+                    <group>
+                        <group>
+                            <field name="customer_id" readonly="job_status != 'draft'"/>
+                            <field name="customer_phone_number" readonly="job_status != 'draft'"/>
+                            <field name="vehicle_id" readonly="job_status != 'draft'"/>
+                            <field name="warranty_status" readonly="job_status == 'invoiced' or job_status == 'done'"/>
+                            <field name="odometer_reading" readonly="job_status == 'invoiced' or job_status == 'done'"/>
+                            <field name="appointment_id"/>
+                        </group>
+                        <group>
+                            <field name="mechanic_ids" widget="many2many_tags" readonly="job_status == 'invoiced' or job_status == 'done' or job_status == 'confirmed'"/>
+                            <field name="job_type_id" readonly="job_status != 'draft'" options="{'no_create':True, 'no_open':True}"/>
+                            <field name="workshop_bay_id" readonly="job_status != 'draft' and job_status !='confirmed' and job_status != 'quotation' " invisible="not job_type_id" create="0" write="0" options="{'no_create':True,'no_open':True}"/>
+                            <field name="job_date" readonly="job_status == 'invoiced' or job_status == 'done'"/>
+                            <field name="delivery_status"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Job Order Lines">
+                            <field name="job_line_ids" readonly="job_status == 'done' or job_status =='invoiced'" />
+                            <h1><group class="oe_subtotal_footer border-top-0 d-flex order-0 order-lg-1 flex-column gap-3" colspan="2" name="sale_total">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="total_amount" class="fw-bolder float-end pe-1"/>
+                            </group></h1>
+                        </page>
+                        <page name="Customer Notes">
+                            <field name="customer_notes" placeholder="Customer Issues"/>
+                        </page>
+                        <page name="Repair Notes">
+                            <field name="repair_instructions" placeholder="Repair Notes" options="{'codeview':True}"/>
+                        </page>
+                        <page name="Images">
+                            <field name="vehicle_image_ids" widget="many2many_binary" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="workshop_job_order_search" model="ir.ui.view">
+        <field name="name">workshop.job.order.search</field>
+        <field name="model">workshop.job.order</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference_number"/>
+                <field name="customer_id"/>
+                <field name="vehicle_id"/>
+                <filter string="Archived" name="inactive" domain="[('active','=', False)]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('job_status','=','confirmed')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('job_status','=','in_progress')]"/>
+                <filter string="Done" name="done" domain="[('job_status','=','done')]"/>
+                <filter string="Invoiced" name="invoiced" domain="[('job_status','=','invoiced')]"/>
+                <filter string="Under Warranty" name="warranty_status" domain="[('warranty_status','=',True)]"/>
+                <filter string="Not Invoiced" name="not_invoiced" domain="[('job_status','!=','invoiced')]"/>
+                <filter string="Invoiced" name="is_invoiced" domain="[('job_status','=','invoiced')]"/>
+                <group>
+                    <filter string="Job Status" name="job_status" context="{'group_by':'job_status'}"/>
+                    <filter string="Job Type" name="job_type_id" context="{'group_by':'job_type_id'}"/>
+                    <filter string="Work Bay" name="workshop_bay_id" context="{'group_by':'workshop_bay_id'}"/>
+                    <filter string="Customer" name="customer_id" context="{'group_by':'customer_id'}"/>
+                    <filter string="Vehicle" name="vehicle_id" context="{'group_by':'vehicle_id'}"/>
+                    <filter string="Mechanics" name="mechanic_ids" context="{'group_by':'mechanic_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="workshop_job_order_action" model="ir.actions.act_window">
+        <field name="name">Job Orders</field>
+        <field name="res_model">workshop.job.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_not_invoiced' : True}</field>
+    </record>
+
+</odoo>

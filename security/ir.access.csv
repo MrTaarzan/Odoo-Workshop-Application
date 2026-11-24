@@ -1,0 +1,23 @@
+id,name,model_id,group_id/id,operation,domain
+access_bay_receptionist,Bay Access Receptionist,workshop.bay,group_workshop_receptionist,r
+access_vehicle_receptionist,Vehicle Access Receptionist,workshop.vehicle,group_workshop_receptionist,cru
+access_job_order_receptionist,Job Order Access Receptionist,workshop.job.order,group_workshop_receptionist,crud
+access_job_type_receptionist,Job Type Access Receptionist,workshop.job.type,group_workshop_receptionist,r
+access_job_line_mechanic,Job Line Access Mechanic,workshop.job.line,group_workshop_mechanic,crud
+access_res_partner_receptionist,Contact Access Receptionist,res.partner,group_workshop_receptionist,cru
+access_job_order_mechanic,Job Order Access Mechanic,workshop.job.order,group_workshop_mechanic,ru,"[('mechanic_ids.user_id','in',user.id)]"
+access_vehicle_mechanic,Vehicle Access Mechanic,workshop.vehicle,group_workshop_mechanic,r,
+access_job_type_manager,Job Type Access Manager,workshop.job.type,group_workshop_manager,crud,
+access_vehicle_make_manager,Vehicle Make Access Manager ,workshop.vehicle.make,group_workshop_manager,crud,
+access_vehicle_manager,Vehicle Access Manager,workshop.vehicle,group_workshop_manager,crud,
+access_res_partner_manager,Contact Access Manager,res.partner,group_workshop_manager,crud,
+access_bay_manager,Bay Access Manager,workshop.bay,group_workshop_manager,crud,
+access_bay_mechanic,Bay Access Mechanic,workshop.bay,group_workshop_mechanic,r,
+access_sale_order_manager,Sale Order Access Manager,sale.order,group_workshop_manager,crud,
+access_invoice_manager,Invoice Access Manager,account.move,group_workshop_manager,crud,
+access_job_type_mechanic,Job Type Access Mechanic,workshop.job.type,group_workshop_mechanic,r,
+access_sale_order_receptionist,Sale Order Access Receptionist,sale.order,group_workshop_receptionist,cru,
+access_job_line_receptionist,Job Line Access Receptionist,workshop.job.line,group_workshop_receptionist,crud,
+access_sale_order_line_receptionist,Sale Order Line Access Receptionist,sale.order.line,group_workshop_receptionist,cr,
+access_vehicle_make_receptionist,Vehicle Make Access Receptionist,workshop.vehicle.make,group_workshop_receptionist,r,
+access_appointment_receptionist,Appointment Access Receptionist,calendar.event,group_workshop_receptionist,crud,

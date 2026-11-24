@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="workshop_vehicle_make_data1" model="workshop.vehicle.make">
+            <field name="vehicle_make">Honda</field>
+        </record>
+        <record id="workshop_vehicle_make_data2" model="workshop.vehicle.make">
+            <field name="vehicle_make">Toyota</field>
+        </record>
+        <record id="workshop_vehicle_make_data3" model="workshop.vehicle.make">
+            <field name="vehicle_make">Ford</field>
+        </record>
+    </data>
+</odoo>
